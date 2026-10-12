@@ -1,0 +1,21 @@
+{
+  "types": {
+    "tags": "tags",
+    "aliases": "aliases",
+    "cssclasses": "multitext",
+    "type": "text",
+    "status": "text",
+    "contact": "text",
+    "email": "text",
+    "industry": "text",
+    "source": "text",
+    "monthly_value": "number",
+    "next_step": "text",
+    "next_date": "date",
+    "last_contact": "date",
+    "client": "text",
+    "due": "date",
+    "priority": "text",
+    "done_on": "date"
+  }
+}

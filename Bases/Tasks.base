@@ -1,0 +1,117 @@
+filters:
+  and:
+  - '!file.inFolder("Templates")'
+  - type == "task"
+formulas:
+  when: if(!due, "No date", if(date(due) < today(), "🔴 Overdue", if(date(due) == today(), "Today", if((date(due) - today()).days.round(0) <= 7, "This week", "Later"))))
+  rank: if(priority == "High", 1, if(priority == "Medium", 2, 3))
+properties:
+  formula.when:
+    displayName: When
+  formula.rank:
+    displayName: Rank
+  file.name:
+    displayName: Task
+  note.priority:
+    displayName: Priority
+  note.client:
+    displayName: Client
+  note.project:
+    displayName: Project
+  note.due:
+    displayName: Due
+  note.status:
+    displayName: Status
+  note.done_on:
+    displayName: Done on
+views:
+- type: table
+  name: Today
+  filters:
+    and:
+    - status != "Done"
+    - if(due, date(due) <= today(), false)
+  order:
+  - file.name
+  - priority
+  - client
+  - project
+  - due
+  - formula.when
+  sort:
+  - property: formula.rank
+    direction: ASC
+  - property: due
+    direction: ASC
+- type: table
+  name: This week
+  filters:
+    and:
+    - status != "Done"
+    - if(due, (date(due) - today()).days <= 7, false)
+  order:
+  - file.name
+  - status
+  - priority
+  - due
+  - formula.when
+  - client
+  sort:
+  - property: due
+    direction: ASC
+- type: table
+  name: Open by project
+  filters:
+    and:
+    - status != "Done"
+  groupBy:
+    property: project
+    direction: ASC
+  order:
+  - file.name
+  - status
+  - priority
+  - due
+- type: table
+  name: Waiting
+  filters:
+    and:
+    - status == "Waiting"
+  order:
+  - file.name
+  - client
+  - due
+- type: table
+  name: Done this week
+  filters:
+    and:
+    - status == "Done"
+    - if(done_on, (today() - date(done_on)).days <= 7, false)
+  order:
+  - file.name
+  - project
+  - done_on
+- type: table
+  name: This client
+  filters:
+    and:
+    - status != "Done"
+    - file.hasLink(this.file)
+  order:
+  - file.name
+  - status
+  - priority
+  - due
+- type: table
+  name: This project
+  filters:
+    and:
+    - file.hasLink(this.file)
+  order:
+  - file.name
+  - status
+  - priority
+  - due
+  sort:
+  - property: due
+    direction: ASC

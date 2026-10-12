@@ -1,0 +1,106 @@
+filters:
+  and:
+  - '!file.inFolder("Templates")'
+  - type == "client"
+formulas:
+  days_quiet: if(last_contact, (today() - date(last_contact)).days.round(0), "")
+  follow_up: if(next_date, if(date(next_date) <= today(), "⏰ Due", "in " + (date(next_date) - today()).days.round(0).toString() + " days"), "")
+properties:
+  note.monthly_value:
+    displayName: Monthly $
+  note.next_step:
+    displayName: Next step
+  note.next_date:
+    displayName: Next date
+  note.last_contact:
+    displayName: Last contact
+  formula.days_quiet:
+    displayName: Days quiet
+  formula.follow_up:
+    displayName: Follow-up
+  file.name:
+    displayName: Client
+  note.contact:
+    displayName: Contact
+  note.status:
+    displayName: Status
+  note.source:
+    displayName: Source
+  note.industry:
+    displayName: Industry
+views:
+- type: table
+  name: Active clients
+  filters:
+    and:
+    - status == "Active"
+  order:
+  - file.name
+  - contact
+  - monthly_value
+  - next_step
+  - next_date
+  - formula.follow_up
+  - formula.days_quiet
+  sort:
+  - property: next_date
+    direction: ASC
+  summaries:
+    monthly_value: Sum
+- type: table
+  name: Follow-ups due
+  filters:
+    and:
+    - status != "Past"
+    - if(next_date, date(next_date) <= today(), false)
+  order:
+  - file.name
+  - status
+  - next_step
+  - next_date
+  - contact
+  sort:
+  - property: next_date
+    direction: ASC
+- type: table
+  name: Leads
+  filters:
+    and:
+    - status == "Lead"
+  order:
+  - file.name
+  - source
+  - contact
+  - next_step
+  - next_date
+- type: table
+  name: Going quiet
+  filters:
+    and:
+    - status == "Active"
+    - if(last_contact, (today() - date(last_contact)).days > 30, true)
+  order:
+  - file.name
+  - contact
+  - last_contact
+  - formula.days_quiet
+- type: cards
+  name: All clients
+  groupBy:
+    property: status
+    direction: ASC
+  order:
+  - file.name
+  - contact
+  - industry
+  - next_step
+- type: table
+  name: Past clients
+  filters:
+    and:
+    - status == "Past"
+  order:
+  - file.name
+  - contact
+  - industry
+  - last_contact

@@ -1,0 +1,23 @@
+{
+  "items": [
+    {
+      "type": "file",
+      "path": "Home.md",
+      "title": "Home"
+    },
+    {
+      "type": "file",
+      "path": "Start Here.md"
+    },
+    {
+      "type": "file",
+      "path": "Bases/Clients.base",
+      "title": "Clients"
+    },
+    {
+      "type": "file",
+      "path": "Bases/Tasks.base",
+      "title": "Tasks"
+    }
+  ]
+}
